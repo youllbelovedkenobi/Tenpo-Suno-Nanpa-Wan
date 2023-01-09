@@ -1,0 +1,344 @@
+<body></body>
+<script>
+    wld = []
+    inv = []
+
+    for (i = 0; i < 14; i++) {
+        inv[i] = 0
+        if (i === 0) {
+        }
+    }
+
+    function set_xy(x, y, value) {
+        var row = wld[y];
+
+        if (row === undefined) {
+            wld[y] = row = [];
+        }
+
+        wld[y][x] = value;
+    }
+
+    function get_xy(x, y) {
+        const row = wld[y];
+
+        if (row === undefined) {
+            return undefined;
+        }
+
+        return row[x];
+    }
+
+    xpos = 0
+    ypos = 2
+    music = 0
+
+    function strscr() {
+        document.body.innerHTML = ""
+        document.write('<table border=1 style="text-align:center"><tr>')
+    }
+    function endscr() {
+        document.write("</tr></table>")
+    }
+    function endrow() {
+        document.write("</tr><tr>")
+    }
+    function noop() {
+        document.write("<td></td>")
+    }
+    function text(textv) {
+        document.write(`<td>${textv}</td>`)
+    }
+    function tile(xscr, yscr) {
+        xblk = xscr + xpos
+        yblk = yscr + ypos
+        blk = get_xy(xblk, yblk)
+
+        if (blk == undefined) {
+            if (yblk < 1) {
+                blk = "fire"
+            }
+            if (yblk == 1) {
+                blk = "earth"
+            }
+            if (yblk == 2) {
+                blk = "water"
+            }
+            if (yblk > 2) {
+                blk = "air"
+            }
+            // set_xy(xblk, yblk, blk)
+        }
+
+        document.write(`<td><img src="${blk}.png" title="${blk}"></td>`)
+    }
+    function getblk(xget, yget) {
+        get = get_xy(xget, yget)
+        if (get == undefined) {
+            if (yget < 1) {
+                get = "fire"
+            }
+            if (yget == 1) {
+                get = "earth"
+            }
+            if (yget == 2) {
+                get = "water"
+            }
+            if (yget > 2) {
+                get = "air"
+            }
+            // set_xy(xget, yget, get)
+        }
+        if (get == "air") {
+            inv[0]++
+        }
+        if (get == "water") {
+            inv[1]++
+        }
+        if (get == "earth") {
+            inv[2]++
+        }
+        if (get == "fire") {
+            inv[3]++
+        }
+        if (get == "quicksand") {
+            inv[4]++
+        }
+        if (get == "ice") {
+            inv[5]++
+        }
+        if (get == "smoke") {
+            inv[6]++
+        }
+        if (get == "comet") {
+            inv[7]++
+        }
+        if (get == "light") {
+            inv[8]++
+        }
+        if (get == "metal") {
+            inv[9]++
+        }
+        if (get == "black_ice") {
+            inv[10]++
+        }
+        if (get == "cataclysm") {
+            inv[11]++
+        }
+        if (get == "plasma") {
+            inv[12]++
+        }
+        if (get == "infinity_element") {
+            inv[13]++
+        }
+        var audio = new Audio(`${get}.ogg`); audio.play(); 
+        set_xy(xget, yget, "air")
+        prtscr()
+
+        if (music === 0) {
+            var audio = new Audio('music.ogg');
+            audio.play()
+            music = 1
+        }
+    }
+    function icon(invt) {
+        document.write(`<td><img src="${invt}.png" title="${invt}"></td>`)
+    }
+    function iconbtn(invt, fn) {
+        document.write(`<td style="background-color:#00FF00"><button type="button" onclick="${fn}"><img src="${invt}.png" title="${invt}"></button></td>`)
+    }
+    function invfn() {
+        strscr()
+        icon("air")
+        icon("water")
+        document.write('<td rowspan="4"></td>')
+        if ((inv[1] > 0) && (inv[2] > 0)) {
+            iconbtn("quicksand", `inv[1]--; inv[2]--; var audio = new Audio('quicksand.ogg'); audio.play(); inv[4]++; invfn()`)
+        } else {
+            icon("quicksand")
+        }
+        if ((inv[0] > 0) && (inv[1] > 0)) {
+            iconbtn("ice", "inv[0]--; inv[1]--; inv[5]++; var audio = new Audio('ice.ogg'); audio.play();  invfn()")
+        } else {
+            icon("ice")
+        }
+        if ((inv[1] > 0) && (inv[3] > 0)) {
+            iconbtn("smoke", "inv[1]--; inv[3]--; inv[6]++; var audio = new Audio('smoke.ogg'); audio.play(); invfn()")
+        } else {
+            icon("smoke")
+        }
+        document.write('<td rowspan="4"></td>')
+        if ((inv[5] > 0) && (inv[9] > 0)) {
+            iconbtn("black_ice", "inv[5]--; inv[9]--; inv[10]++; var audio = new Audio('black_ice.ogg'); audio.play(); invfn()")
+        } else {
+            icon("black_ice")
+        }
+        if ((inv[6] > 0) && (inv[7] > 0)) {
+            iconbtn("cataclysm", "inv[6]--; inv[7]--; inv[11]++; var audio = new Audio('cataclysm.ogg'); audio.play(); invfn()")
+        } else {
+            icon("cataclysm")
+        }
+        endrow()
+        text(`${inv[0]}`)
+        text(`${inv[1]}`)
+        text(`${inv[4]}`)
+        text(`${inv[5]}`)
+        text(`${inv[6]}`)
+        text(`${inv[10]}`)
+        text(`${inv[11]}`)
+        endrow()
+        icon("earth")
+        icon("fire")
+        if ((inv[0] > 0) && (inv[2] > 0)) {
+            iconbtn("comet", "inv[0]--; inv[2]--; inv[7]++; var audio = new Audio('comet.ogg'); audio.play(); invfn()")
+        } else {
+            icon("comet")
+        }
+        if ((inv[0] > 0) && (inv[3] > 0)) {
+            iconbtn("light", "inv[0]--; inv[3]--; inv[8]++; var audio = new Audio('light.ogg'); audio.play(); invfn()")
+        } else {
+            icon("light")
+        }
+        if ((inv[2] > 0) && (inv[3] > 0)) {
+            iconbtn("metal", "inv[2]--; inv[3]--; inv[9]++; var audio = new Audio('metal.ogg'); audio.play(); invfn()")
+        } else {
+            icon("metal")
+        }
+        if ((inv[4] > 0) && (inv[8] > 0)) {
+            iconbtn("plasma", "inv[4]--; inv[8]--; inv[12]++; var audio = new Audio('plasma.ogg'); audio.play(); invfn()")
+        } else {
+            icon("plasma")
+        }
+        if ((inv[10] > 0) && (inv[11] > 0) && (inv[12] > 0)) {
+            iconbtn("infinity_element", "inv[10]--; inv[11]--; inv[12]--; inv[13]++; var audio = new Audio('infinity_element.ogg'); audio.play(); invfn()")
+        } else {
+            icon("infinity_element")
+        }
+        endrow()
+        text(`${inv[2]}`)
+        text(`${inv[3]}`)
+        text(`${inv[7]}`)
+        text(`${inv[8]}`)
+        text(`${inv[9]}`)
+        text(`${inv[12]}`)
+        text(`${inv[13]}`)
+        endrow()
+        document.write('<td colspan="9"><button type="button" onclick="prtscr()">Back to the World</button></td>')
+        endscr()
+    }
+    function place(plc) {
+        set_xy(xpos, ypos, plc)
+        if (plc == "water") {
+            inv[1]--
+        }
+        if (plc == "earth") {
+            inv[2]--
+        }
+        if (plc == "fire") {
+            inv[3]--
+        }
+        if (plc == "quicksand") {
+            inv[4]--
+        }
+        if (plc == "ice") {
+            inv[5]--
+        }
+        if (plc == "smoke") {
+            inv[6]--
+        }
+        if (plc == "comet") {
+            inv[7]--
+        }
+        if (plc == "light") {
+            inv[8]--
+        }
+        if (plc == "metal") {
+            inv[9]--
+        }
+        if (plc == "black_ice") {
+            inv[10]--
+        }
+        if (plc == "cataclysm") {
+            inv[11]--
+        }
+        if (plc == "plasma") {
+            inv[12]--
+        }
+        if (plc == "infinity_element") {
+            inv[13]--
+        }
+        var audio = new Audio(`${plc}.ogg`);
+        audio.play();
+        prtscr()
+    }
+    function prtscr() {
+        strscr()
+        tile(-2, 1)
+        tile(-1, 1)
+        tile(0, 1)
+        tile(1, 1)
+        tile(2, 1)
+        document.write('<td><button type="button" onclick="getblk(xpos-1, ypos+1)">Pick up</button></td>')
+        document.write('<td><button type="button" onclick="ypos++; prtscr()">↑</button></td>')
+        document.write('<td><button type="button" onclick="getblk(xpos+1, ypos+1)">Pick up</button></td>')
+        endrow()
+        tile(-2, 0)
+        tile(-1, 0)
+        tile(0, 0)
+        tile(1, 0)
+        tile(2, 0)
+        document.write('<td><button type="button" onclick="xpos--; prtscr()">←</button></td>')
+        document.write('<td><button type="button" onclick="invfn()">Inventory</button></td>')
+        document.write('<td><button type="button" onclick="xpos++; prtscr()">→</button></td>')
+        endrow()
+        tile(-2, -1)
+        tile(-1, -1)
+        tile(0, -1)
+        tile(1, -1)
+        tile(2, -1)
+        document.write('<td><button type="button" onclick="getblk(xpos-1, ypos-1)">Pick up</button></td>')
+        document.write('<td><button type="button" onclick="ypos--; prtscr()">↓</button></td>')
+        document.write('<td><button type="button" onclick="getblk(xpos+1, ypos-1)">Pick up</button></td>')
+        endscr()
+        if (inv[1] > 0) {
+            document.write('<button type="button" onclick="place(`water`)">Place water</button>')
+        }
+        if (inv[2] > 0) {
+            document.write('<button type="button" onclick="place(`earth`)">Place dirt</button>')
+        }
+        if (inv[3] > 0) {
+            document.write('<button type="button" onclick="place(`fire`)">Place fire</button>')
+        }
+        if (inv[4] > 0) {
+            document.write('<button type="button" onclick="place(`quicksand`)">Place mud</button>')
+        }
+        if (inv[5] > 0) {
+            document.write('<button type="button" onclick="place(`ice`)">Place ice</button>')
+        }
+        if (inv[6] > 0) {
+            document.write('<button type="button" onclick="place(`smoke`)">Place smoke</button>')
+        }
+        if (inv[7] > 0) {
+            document.write('<button type="button" onclick="place(`comet`)">Place comet</button>')
+        }
+        if (inv[8] > 0) {
+            document.write('<button type="button" onclick="place(`light`)">Place light</button>')
+        }
+        if (inv[9] > 0) {
+            document.write('<button type="button" onclick="place(`metal`)">Place metal</button>')
+        }
+        if (inv[10] > 0) {
+            document.write('<button type="button" onclick="place(`black_ice`)">Place black ice</button>')
+        }
+        if (inv[11] > 0) {
+            document.write('<button type="button" onclick="place(`cataclysm`)">Place cataclysm</button>')
+        }
+        if (inv[12] > 0) {
+            document.write('<button type="button" onclick="place(`plasma`)">Place plasma</button>')
+        }
+        if (inv[13] > 0) {
+            document.write('<button type="button" onclick="place(`infinity_element`)">Place infinity element</button>')
+        }
+    }
+    prtscr()
+</script>
