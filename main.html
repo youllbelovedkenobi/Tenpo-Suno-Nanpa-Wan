@@ -2,6 +2,7 @@
 <script>
     wld = []
     inv = []
+    h = 20
 
     for (i = 0; i < 14; i++) {
         inv[i] = 0
@@ -147,6 +148,11 @@
     function iconbtn(invt, fn) {
         document.write(`<td style="background-color:#00FF00"><button type="button" onclick="${fn}"><img src="${invt}.png" title="${invt}"></button></td>`)
     }
+    function bandage() {
+        inv[4]--
+        h++
+        prtscr()
+    }
     function invfn() {
         strscr()
         icon("air")
@@ -271,6 +277,11 @@
         audio.play();
         prtscr()
     }
+    function death(){
+        document.body.innerHTML = ""
+        document.write("<h2>You died!</h2>")
+        document.write("<a href='https://www.youtube.com/watch?v=dQw4w9WgXcQ'>Respawn</a>")
+    }
     function prtscr() {
         strscr()
         tile(-2, 1)
@@ -284,7 +295,7 @@
         endrow()
         tile(-2, 0)
         tile(-1, 0)
-        tile(0, 0)
+        icon("avatar")
         tile(1, 0)
         tile(2, 0)
         document.write('<td><button type="button" onclick="xpos--; prtscr()">←</button></td>')
@@ -300,6 +311,10 @@
         document.write('<td><button type="button" onclick="ypos--; prtscr()">↓</button></td>')
         document.write('<td><button type="button" onclick="getblk(xpos+1, ypos-1)">Pick up</button></td>')
         endscr()
+        text(h)
+        if ((inv[4] > 0) && (h < 20)) {
+            document.write('<button type="button" onclick="bandage()">Make bandage</button>')
+        }
         if (inv[1] > 0) {
             document.write('<button type="button" onclick="place(`water`)">Place water</button>')
         }
@@ -339,6 +354,17 @@
         if (inv[13] > 0) {
             document.write('<button type="button" onclick="place(`infinity_element`)">Place infinity element</button>')
         }
-    }
+
+        damage = get_xy(xpos, ypos)
+        if (damage === "fire") {
+            h--
+        }
+        if (damage === undefined && ypos < 1) {
+            h--
+        }
+        if (h === 0) {
+            death()
+        }
+        }
     prtscr()
 </script>
